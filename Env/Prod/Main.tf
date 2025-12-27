@@ -18,11 +18,11 @@ module "pip" {
   source     = "../../Modules/Public_ip"
   pip        = var.pip
 }
-# module "vms" {
-#   depends_on = [module.pip]
-#   source     = "../../Modules/Azure_compute"
-#   vms        = var.vms
-# }
+module "vms" {
+  depends_on = [module.pip,module.key_secret]
+  source     = "../../Modules/Azure_compute"
+  vms        = var.vms
+}
 module "key_vault" {
   depends_on = [module.rgs]
   source     = "../../Modules/Azure_key_vault"

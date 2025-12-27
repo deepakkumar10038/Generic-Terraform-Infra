@@ -10,7 +10,7 @@ variable "vms" {
     size                            = string
       key_name            = string
     secret_name         = string
-    secret_value        = string
+    # secret_value        = string
     disable_password_authentication = bool
     source_image_reference = map(string)
   }))
