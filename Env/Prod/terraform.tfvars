@@ -11,7 +11,7 @@ rgs = {
 
 Stg = {
   stg1 = {
-    name                     = "deepstg2"
+    name                     = "deepstg26666736336"
     resource_group_name      = "deep_rg2"
     location                 = "west us 2"
     account_tier             = "Standard"
@@ -62,8 +62,8 @@ vms = {
     subnet_name                     = "frontend-subnet"
     pip_name                        = "deep_pip"
     vm_name                         = "deep-vm1"
-    size                            = "Standard_F2"
-     key_name            = "deepkvvvvv1"
+    size                            = "Standard_D2s_v3"
+     key_name            = "deepkvvvv5364v1"
     secret_name = "vm1"
     # secret_value        = "password2"
     disable_password_authentication = "false"
@@ -83,8 +83,8 @@ vms = {
     subnet_name                     = "frontend-subnet"
     pip_name                        = "deep_pip1"
     vm_name                         = "deep-vm2"
-    size                            = "Standard_F2"
-  key_name            = "deepkvvvvv1"
+    size                            = "Standard_D2s_v3"
+  key_name            = "deepkvvvv5364v1"
     secret_name = "vm2"
     # admin_password        = "password2"
     disable_password_authentication = "false"
@@ -99,7 +99,7 @@ vms = {
 
 key_vault = {
   KV1 = {
-    name                        = "deepkvvvvv1"
+    name                        = "deepkvvvv5364v1"
     location                    = "west us 2"
     resource_group_name         = "deep_rg2"
     enabled_for_disk_encryption = true
@@ -133,55 +133,55 @@ key_vault = {
 
 key_secret = {
   secret1 = {
-    key_name = "deepkvvvvv1"
+    key_name = "deepkvvvv5364v1"
     name     = "vm1"
     rg_name  = "deep_rg2"
     value    = "deepak@1234"
   }
 
   secret2 = {
-    key_name = "deepkvvvvv1"
+    key_name = "deepkvvvv5364v1"
     name     = "vm2"
     rg_name  = "deep_rg2"
     value    = "deepak@1234"
   }
     secret3 = {
-    key_name = "deepkvvvvv1"
+    key_name = "deepkvvvv5364v1"
     name     = "sql"
     rg_name  = "deep_rg2"
     value    = "Dee@199672"
   }
 }
 
-# sql_server = {
-#   mssql1 = {
-#     name                         = "deepsql"
-#     resource_group_name          = "deep_rg2"
-#     location                     = "west us 2"
-#     version                      = "12.0"
-#     key_name            = "deepkvvvvv1"
-#     secret_name         = "sql"
-#     secret_value        = "password2"
-#      minimum_tls_version          = "1.2"
-#      public_network_access_enabled="true"
-#     tags = {
-#       environment = "production"
-#     }
+sql_server = {
+  mssql1 = {
+    name                         = "deepsql"
+    resource_group_name          = "deep_rg2"
+    location                     = "west us 2"
+    version                      = "12.0"
+    key_name            = "deepkvvvv5364v1"
+    secret_name         = "sql"
+    # secret_value        = "password2"
+     minimum_tls_version          = "1.2"
+     public_network_access_enabled="true"
+    tags = {
+      environment = "production"
+    }
 
-#   }
-# }
+  }
+}
 
 
-# sql_db = {
-#   sqldb1 = {
-#   name         = "deepsql-db"
-#     server_name         = "deepsql"
-#     resource_group_name = "deep_rg2"
-#   collation    = "SQL_Latin1_General_CP1_CI_AS"
-#   license_type = "LicenseIncluded"
-#   max_size_gb  = "2"
-#   sku_name     = "S0"
-#   enclave_type = "VBS"
+sql_db = {
+  sqldb1 = {
+  name         = "deepsql-db"
+    server_name         = "deepsql"
+    resource_group_name = "deep_rg2"
+  collation    = "SQL_Latin1_General_CP1_CI_AS"
+  license_type = "LicenseIncluded"
+  max_size_gb  = "2"
+  sku_name     = "S0"
+  enclave_type = "VBS"
   
-#   }
-#   }
+  }
+  }

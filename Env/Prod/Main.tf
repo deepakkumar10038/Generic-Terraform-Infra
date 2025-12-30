@@ -35,16 +35,16 @@ module "key_secret" {
   key_secret  = var.key_secret
 }
 
-# module "sql_server" {
-#   depends_on = [module.rgs]
-#   source     = "../../Modules/Sql_server"
-#   sql_server =  var.sql_server
-# }
+module "sql_server" {
+  depends_on = [module.rgs]
+  source     = "../../Modules/Sql_server"
+  sql_server =  var.sql_server
+}
 
-# module "sql_database" {
-#    depends_on = [module.rgs]
-#   source     = "../../Modules/Sql_database"
-#   sql_db = var.sql_db
-# }
+module "sql_database" {
+   depends_on = [module.rgs,module.sql_server]
+  source     = "../../Modules/Sql_database"
+  sql_db = var.sql_db
+}
 
 

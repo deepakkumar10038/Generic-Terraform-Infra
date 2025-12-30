@@ -83,37 +83,38 @@ variable "key_secret" {
   }))
 }
 
-# variable "sql_server" {
-#   type=map(object({
-#    name                          = string
-#   resource_group_name           = string
-#   location                      = string
-#  administrator_login=string
-#  administrator_login_password=string
-
-#   version                       = string
-#   minimum_tls_version           = string
-#   public_network_access_enabled = string
-
-
-#   tags = map(string)
-#   }))
-#   }
+variable "sql_server" {
+  type=map(object({
+   name                          = string
+  resource_group_name           = string
+  location                      = string
+        key_name            = string
+    secret_name         = string
+  version                       = string
+  administrator_login           = optional(string)
+  administrator_login_password  = optional(string)
+  minimum_tls_version           = string
+  public_network_access_enabled = string
 
 
-# variable "sql_db" {
-#   type = map(object({
-#     server_name         = string
-#     resource_group_name = string
-#     name                = string
-#     collation           = string
-#     license_type        = string
-#     max_size_gb         = number
-#     sku_name            = string
-#     enclave_type        = string
-#     tags                = optional(map(string))
+  tags = map(string)
+  }))
+  }
 
-#   }))
 
-# }
+variable "sql_db" {
+  type = map(object({
+    server_name         = string
+    resource_group_name = string
+    name                = string
+    collation           = string
+    license_type        = string
+    max_size_gb         = number
+    sku_name            = string
+    enclave_type        = string
+    tags                = optional(map(string))
+
+  }))
+
+}
 
