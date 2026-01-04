@@ -19,7 +19,7 @@ module "pip" {
   pip        = var.pip
 }
 module "vms" {
-  depends_on = [module.pip,module.key_secret]
+  depends_on = [module.vnet,module.pip,module.key_secret]
   source     = "../../Modules/Azure_compute"
   vms        = var.vms
 }
@@ -36,7 +36,7 @@ module "key_secret" {
 }
 
 module "sql_server" {
-  depends_on = [module.rgs]
+  depends_on = [module.rgs,module.key_secret]
   source     = "../../Modules/Sql_server"
   sql_server =  var.sql_server
 }
