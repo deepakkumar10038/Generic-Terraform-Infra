@@ -1,9 +1,9 @@
 trigger: none
 
-pool: default
+pool:
+  name: default
 
 steps:
-
 - task: TerraformInstaller@1
   displayName: 'terraform install'
   inputs:
@@ -14,24 +14,26 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/env/prod'
     backendServiceArm: 'Deepak_serviceconnection'
     backendAzureRmStorageAccountName: 'deep57stg'
     backendAzureRmContainerName: 'deepcnt'
-    backendAzureRmKey: 'terraform.tfstate'
+    backendAzureRmKey: 'prod/terraform.tfstate'
 
 - task: TerraformTask@5
   displayName: 'terraform validate'
   inputs:
     provider: 'azurerm'
     command: 'validate'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/env/prod'
 
 - task: TerraformTask@5
   displayName: 'terraform fmt'
   inputs:
     provider: 'azurerm'
     command: 'custom'
-    outputTo: 'console'
     customCommand: 'fmt'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/env/prod'
     environmentServiceNameAzureRM: 'Deepak_serviceconnection'
 
 - task: TerraformTask@5
@@ -39,6 +41,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'plan'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/env/prod'
     environmentServiceNameAzureRM: 'Deepak_serviceconnection'
 
 - task: TerraformTask@5
@@ -46,4 +49,5 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'apply'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/env/prod'
     environmentServiceNameAzureRM: 'Deepak_serviceconnection'
