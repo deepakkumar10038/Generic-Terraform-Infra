@@ -1,104 +1,52 @@
 trigger: none
 
-pool: Default
+pool:
+  name: default
 
-stages:
-- stage: SoftwareCompositionAnalysis
-  displayName: Software Composition Analysis (Dependency Security)
-  jobs: 
-  - job: DependencyVulnerabilityScan
-    displayName: Dependency Vulnerability Scan (Retire.js)
-    steps: 
-    - task: PowerShell@2
-      displayName: Run Dependency Security Scan
-      inputs:
-        targetType: 'inline'
-        script: |
-          npm install -g retire
-          npm install
-          retire --exitwith 0
+variables:
+ -name: work_dir
+ -value: '$(System.DefaultWorkingDirectory)/env/prod'
 
-# - stage: StaticCodeAnalysis
-#   displayName: Static Code Analysis
-#   jobs: 
-#   - job: SonarQubeAnalysis
-#     displayName: Static Code Analysis (SonarQube)
-#     steps:
-#     - task: PowerShell@2
-#       inputs:
-#         targetType: 'inline'
-#         script: 'sonar -D sonar.host.url=http://localhost:9000 -D sonar.token=**** -D sonar.projectKey=TodoPipeline'
+steps:
+- task: TerraformInstaller@1
+  displayName: 'terraform install'
+  inputs:
+    terraformVersion: 'latest'
 
-- stage: CodeQualityChecks
-  displayName: Code Quality & Linting
-  jobs:
-  - job: LintingChecks
-    displayName: Multi-Language Linting Checks
-    steps:
-    - task: PowerShell@2
-      continueOnError: true
-      displayName: JavaScript Linting (Biome)
-      inputs:
-        targetType: 'inline'
-        script: |
-          Invoke-WebRequest -Uri "https://github.com/biomejs/biome/releases/download/%40biomejs%2Fbiome%402.3.8/biome-win32-x64.exe" -OutFile "$(Agent.ToolsDirectory)/biome.exe"
-          $(Agent.ToolsDirectory)/biome.exe lint $(System.DefaultWorkingDirectory)/src/
+- task: TerraformTask@5
+  displayName: 'terraform init'
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    backendServiceArm: 'Deepak_serviceconnection'
+    backendAzureRmStorageAccountName: 'deep57stg'
+    backendAzureRmContainerName: 'deepcnt'
+    backendAzureRmKey: 'prod/terraform.tfstate'
 
-    - task: PowerShell@2
-      continueOnError: true
-      displayName: CSS Linting (Stylelint)  
-      inputs:
-        targetType: 'inline'
-        script: |
-          npm install -g stylelint
-          npm install -g stylelint-config-standard        
-          stylelint $(System.DefaultWorkingDirectory)/src --config stylelint.config.mjs
+- task: TerraformTask@5
+  displayName: 'terraform validate'
+  inputs:
+    provider: 'azurerm'
+    command: 'validate'
 
-    - task: PowerShell@2
-      continueOnError: true
-      displayName: YAML Linting (yamllint)    
-      inputs:
-        targetType: 'inline'
-        script: |
-          pip install --user yamllint
-          yamllint $(System.DefaultWorkingDirectory)
+- task: TerraformTask@5
+  displayName: 'terraform fmt'
+  inputs:
+    provider: 'azurerm'
+    command: 'custom'
+    customCommand: 'fmt'
+    environmentServiceNameAzureRM: 'Deepak_serviceconnection'
 
-    - task: PowerShell@2
-      continueOnError: true
-      displayName: Markdown Linting (markdownlint)      
-      inputs:
-        targetType: 'inline'
-        script: |
-          npm install -g markdownlint-cli      
-          markdownlint $(System.DefaultWorkingDirectory)/
+- task: TerraformTask@5
+  displayName: 'terraform plan'
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    environmentServiceNameAzureRM: 'Deepak_serviceconnection'
 
-- stage: BuildAndPackage
-  displayName: Build & Artifact Packaging
-  jobs:
-  - job: ApplicationBuild
-    displayName: Application Build
-    steps:
-    - task: NodeTool@0
-      displayName: Setup Node.js Environment
-      inputs:
-        versionSource: 'spec'
-        versionSpec: '16.x'
-
-    - task: PowerShell@2
-      displayName: Install Dependencies
-      inputs:
-        targetType: 'inline'
-        script: 'npm install'
-
-    - task: PowerShell@2
-      displayName: Build Application
-      inputs:
-        targetType: 'inline'
-        script: 'npm run build'
-
-    - task: PublishPipelineArtifact@1
-      displayName: Publish Build Artifact
-      inputs:
-        targetPath: '$(System.DefaultWorkingDirectory)/build/'
-        artifact: 'todo-ui'
-        publishLocation: 'pipeline'
+- task: TerraformTask@5
+  displayName: 'terraform apply'
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    environmentServiceNameAzureRM: 'Deepak_serviceconnection'
