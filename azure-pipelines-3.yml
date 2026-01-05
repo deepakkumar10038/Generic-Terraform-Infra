@@ -5,7 +5,7 @@ pool:
 
 variables:
 - name: work_dir
-  value: '$(System.DefaultWorkingDirectory)/env/prod'
+  value: '$(System.DefaultWorkingDirectory)/env/dev'
 
 steps:
 - task: TerraformInstaller@1
