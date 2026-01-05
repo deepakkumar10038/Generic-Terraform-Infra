@@ -18,6 +18,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'init'
+    workingDirectory: '$(work_dir)'
     backendServiceArm: 'Deepak_serviceconnection'
     backendAzureRmStorageAccountName: 'deep57stg'
     backendAzureRmContainerName: 'deepcnt'
@@ -28,6 +29,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'validate'
+    workingDirectory: '$(work_dir)'
 
 - task: TerraformTask@5
   displayName: 'terraform fmt'
@@ -35,6 +37,7 @@ steps:
     provider: 'azurerm'
     command: 'custom'
     customCommand: 'fmt'
+    workingDirectory: '$(work_dir)'
     environmentServiceNameAzureRM: 'Deepak_serviceconnection'
 
 - task: TerraformTask@5
@@ -42,6 +45,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'plan'
+    workingDirectory: '$(work_dir)'
     environmentServiceNameAzureRM: 'Deepak_serviceconnection'
 
 - task: TerraformTask@5
@@ -49,4 +53,5 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'apply'
+    workingDirectory: '$(work_dir)'
     environmentServiceNameAzureRM: 'Deepak_serviceconnection'
