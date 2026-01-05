@@ -15,7 +15,9 @@ steps:
     provider: 'azurerm'
     command: 'init'
     backendServiceArm: 'Deepak_serviceconnection'
-
+    backendAzureRmStorageAccountName: 'deep57stg'
+    backendAzureRmContainerName: 'deepcnt'
+    backendAzureRmKey: 'terraform.tfstate'
 
 - task: TerraformTask@5
   displayName: 'terraform validate'
