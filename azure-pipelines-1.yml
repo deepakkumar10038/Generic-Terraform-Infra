@@ -1,6 +1,6 @@
 trigger: none
 
-pool: Deepakagent
+pool: default
 
 steps:
 
@@ -14,10 +14,8 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'init'
-    backendServiceArm: 'Deepakservice Connection'
-    backendAzureRmStorageAccountName: 'deep56stg'
-    backendAzureRmContainerName: 'deepcnt'
-    backendAzureRmKey: 'Dev.terraform.tfstate'
+    backendServiceArm: 'Deepak_serviceconnection'
+
 
 - task: TerraformTask@5
   displayName: 'terraform validate'
@@ -32,18 +30,18 @@ steps:
     command: 'custom'
     outputTo: 'console'
     customCommand: 'fmt'
-    environmentServiceNameAzureRM: 'Deepakservice Connection'
+    environmentServiceNameAzureRM: 'Deepak_serviceconnection'
 
 - task: TerraformTask@5
   displayName: 'terraform plan'
   inputs:
     provider: 'azurerm'
     command: 'plan'
-    environmentServiceNameAzureRM: 'Deepakservice Connection'
+    environmentServiceNameAzureRM: 'Deepak_serviceconnection'
 
 - task: TerraformTask@5
   displayName: 'terraform apply'
   inputs:
     provider: 'azurerm'
     command: 'apply'
-    environmentServiceNameAzureRM: 'Deepakservice Connection'
+    environmentServiceNameAzureRM: 'Deepak_serviceconnection'
