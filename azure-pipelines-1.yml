@@ -38,27 +38,33 @@ stages:
             command: 'plan'
             workingDirectory: '$(work_dir)'
             environmentServiceNameAzureRM: 'deepak_service_new'
-      
+
+
+  - stage: scanning
+    displayName: scanning
+    jobs:
       - job: terraformtfsec
         displayName: tfsec
-        dependsOn: terraforminitandplan
         pool: default
         steps:
         - task: tfsec@1
           inputs:
             version: 'v1.26.0'
             dir: '$(Build.SourcesDirectory)'
-        
+
+  - stage: deploy
+    displayName: deploy
+    jobs:
       - job: manualvalidation
         displayName: manaul validation
-        dependsOn: terraforminitandplan
         pool: server
         steps:
         - task: ManualValidation@1
           inputs:
             notifyUsers: 'deepakkumar10038@gmail.com'
             approvers: 'deepakkumar10038@gmail.com'
-        
+
+
       - job: terraformapply
         displayName: terraform job apply
         dependsOn: manualvalidation
