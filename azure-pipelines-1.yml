@@ -6,7 +6,7 @@ pool: default
 
 variables: 
   - name: work_dir
-    value: '$(System.DefaultWorkingDirectory)/Env/dev)'
+    value: '$(System.DefaultWorkingDirectory)/Env/Dev)'
 
 stages:
   - stage: Build
