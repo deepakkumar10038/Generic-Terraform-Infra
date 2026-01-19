@@ -23,7 +23,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            workingDirectory: '$(work_dir)'
+            workingDirectory: $(work_dir)
             backendServiceArm: 'deepak_service_new'
             backendAzureRmStorageAccountName: 'deep57stg'
             backendAzureRmContainerName: 'deepcnt'
@@ -32,12 +32,12 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'validate'
-            workingDirectory: '$(work_dir)'
+            workingDirectory: $(work_dir)
         - task: TerraformTask@5
           inputs:
             provider: 'azurerm'
             command: 'plan'
-            workingDirectory: '$(work_dir)'
+            workingDirectory: $(work_dir)
             environmentServiceNameAzureRM: 'deepak_service_new'
 
 
@@ -51,7 +51,7 @@ stages:
         - task: tfsec@1
           inputs:
             version: 'v1.26.0'
-            dir: '$(work_dir)'
+            dir: $(work_dir)
 
   - stage: deploy
     displayName: deploy
@@ -76,7 +76,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            workingDirectory: '$(work_dir)'
+            workingDirectory: $(work_dir)
             backendServiceArm: 'deepak_service_new'
             backendAzureRmStorageAccountName: 'deep57stg'
             backendAzureRmContainerName: 'deepcnt'
@@ -85,7 +85,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'apply'
-            workingDirectory: '$(work_dir)'
+            workingDirectory: $(work_dir)
             environmentServiceNameAzureRM: 'deepak_service_new'
 
         
