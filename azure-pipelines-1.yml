@@ -24,6 +24,7 @@ stages:
             provider: 'azurerm'
             command: 'init'
             workingDirectory: '$(work_dir)'
+            backendServiceArm: 'deepak_service_new'
             backendAzureRmStorageAccountName: 'deep57stg'
             backendAzureRmContainerName: 'deepcnt'
             backendAzureRmKey: 'terraform.tfstate'
@@ -86,3 +87,5 @@ stages:
             command: 'apply'
             workingDirectory: '$(work_dir)'
             environmentServiceNameAzureRM: 'deepak_service_new'
+
+        
