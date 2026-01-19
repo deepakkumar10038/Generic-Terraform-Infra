@@ -1,106 +1,66 @@
 trigger:
-  branches:
-    include:
-    - main
-    - feature/*
+  - main
+  - feature
 
-pr:
-  branches:
-    include:
-    - main
-
-pool:
-  name: default
-
-variables:
-- name: work_dir
-  value: '$(System.DefaultWorkingDirectory)/env/dev'
+pool: default
 
 stages:
-
-# =================================================
-# PLAN STAGE (Feature Push + PR + Main)
-# =================================================
-- stage: Terraform_Plan
-  displayName: "Terraform Plan"
-  jobs:
-  - job: plan
-    displayName: "Terraform Plan Job"
-    steps:
-    - task: TerraformInstaller@1
-      displayName: 'Install Terraform'
-      inputs:
-        terraformVersion: 'latest'
-
-    - task: TerraformTask@5
-      displayName: 'Terraform Init'
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: '$(work_dir)'
-        backendServiceArm: 'Deepak_serviceconnection'
-        backendAzureRmStorageAccountName: 'deep57stg'
-        backendAzureRmContainerName: 'deepcnt'
-        backendAzureRmKey: 'prod/terraform.tfstate'
-
-    - task: TerraformTask@5
-      displayName: 'Terraform Validate'
-      inputs:
-        provider: 'azurerm'
-        command: 'validate'
-        workingDirectory: '$(work_dir)'
-
-    - task: TerraformTask@5
-      displayName: 'Terraform Fmt'
-      inputs:
-        provider: 'azurerm'
-        command: 'custom'
-        customCommand: 'fmt'
-        workingDirectory: '$(work_dir)'
-
-    - task: TerraformTask@5
-      displayName: 'Terraform Plan'
-      inputs:
-        provider: 'azurerm'
-        command: 'plan'
-        workingDirectory: '$(work_dir)'
-        environmentServiceNameAzureRM: 'Deepak_serviceconnection'
-
-
-# =================================================
-# APPLY STAGE (ONLY MAIN BRANCH)
-# =================================================
-- stage: Terraform_Apply
-  displayName: "Terraform Apply"
-  dependsOn: Terraform_Plan
-  condition: |
-    and(
-      succeeded(),
-      eq(variables['Build.SourceBranch'], 'refs/heads/main'),
-      ne(variables['Build.Reason'], 'PullRequest')
-    )
-
-  jobs:
-  - deployment: apply
-    displayName: "Apply with Approval"
-    environment: terraform-prod   # 👈 reviewer approval here
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-
-          - task: ManualValidation@0
-            displayName: "Manual Approval Before Apply"
-            inputs:
-              instructions: |
-                Review terraform plan output.
-                Approve to proceed with terraform apply.
-              timeoutInMinutes: 1440
-
-          - task: TerraformTask@5
-            displayName: 'Terraform Apply'
-            inputs:
-              provider: 'azurerm'
-              command: 'apply'
-              workingDirectory: '$(work_dir)'
-              environmentServiceNameAzureRM: 'Deepak_serviceconnection'
+  - stage: Build
+    displayName: Build
+    jobs:
+      - job: terraforminitandplan
+        displayName: terraform init and plan job
+        pool: default
+        steps:
+        - task: TerraformInstaller@1
+          inputs:
+            terraformVersion: 'latest'
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            backendAzureRmStorageAccountName: 'deep57stg'
+            backendAzureRmContainerName: 'deepcnt'
+            backendAzureRmKey: 'terraform.tfstate'
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'validate'
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            environmentServiceNameAzureRM: 'deepak_service_new'
+      
+      - job: terraformtfsec
+        displayName: tfsec
+        dependsOn: terraforminitandplan
+        pool: default
+        steps:
+        - task: tfsec@1
+          inputs:
+            version: 'v1.26.0'
+            dir: '$(Build.SourcesDirectory)'
+        
+      - job: manualvalidation
+        displayName: manaul validation
+        dependsOn: terraforminitandplan
+        pool: server
+        steps:
+        - task: ManualValidation@1
+          inputs:
+            notifyUsers: 'deepakkumar10038@gmail.com'
+            approvers: 'deepakkumar10038@gmail.com'
+        
+      - job: terraformapply
+        displayName: terraform job apply
+        dependsOn: manualvalidation
+        pool: Default
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+        steps:
+        
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'apply'
+            environmentServiceNameAzureRM: 'deepak_service_new'
