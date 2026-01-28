@@ -22,7 +22,7 @@ stages:
             command: 'init'
             workingDirectory: '$(System.DefaultWorkingDirectory)/Env/Dev'
             backendServiceArm: 'deepak_service_new'
-            backendAzureRmStorageAccountName: 'deep57stg'
+            backendAzureRmStorageAccountName: 'deep55stg'
             backendAzureRmContainerName: 'deepcnt'
             backendAzureRmKey: 'terraform.tfstate'
         - task: TerraformTask@5
