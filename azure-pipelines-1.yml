@@ -34,7 +34,6 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'plan'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Env/Dev'
             environmentServiceNameAzureRM: 'Deepak_Service'
 
 
