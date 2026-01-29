@@ -20,20 +20,23 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Env/Dev'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
             backendServiceArm: 'Deepak_Service'
             backendAzureRmStorageAccountName: 'deep55stg'
             backendAzureRmContainerName: 'deepcnt'
             backendAzureRmKey: 'terraform.tfstate'
         - task: TerraformTask@5
+          displayName: Validate Job
           inputs:
             provider: 'azurerm'
             command: 'validate'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Env/Dev'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
         - task: TerraformTask@5
+          displayName: Plan Job
           inputs:
             provider: 'azurerm'
             command: 'plan'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
             environmentServiceNameAzureRM: 'Deepak_Service'
 
 
@@ -47,7 +50,7 @@ stages:
         - task: tfsec@1
           inputs:
             version: 'v1.26.0'
-            dir: '$(System.DefaultWorkingDirectory)/Env/Dev'
+            dir: '$(System.DefaultWorkingDirectory)/env/dev'
 
   - stage: deploy
     displayName: deploy
@@ -72,16 +75,17 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Env/Dev'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
             backendServiceArm: 'Deepak_Service'
-            backendAzureRmStorageAccountName: 'deep57stg'
+            backendAzureRmStorageAccountName: 'deep55stg'
             backendAzureRmContainerName: 'deepcnt'
             backendAzureRmKey: 'terraform.tfstate'
         - task: TerraformTask@5
+          displayName: Apply Job
           inputs:
             provider: 'azurerm'
             command: 'apply'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Env/Dev'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
             environmentServiceNameAzureRM: 'Deepak_Service'
 
         

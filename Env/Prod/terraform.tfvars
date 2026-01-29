@@ -19,7 +19,7 @@ rgs = {
 
 Stg = {
   stg1 = {
-    name                     = "deepstg26666736336"
+    name                     = "deepstg28998"
     resource_group_name      = "deep_rg"
     location                 = "west us 2"
     account_tier             = "Standard"
@@ -75,6 +75,10 @@ vms = {
     secret_name = "vm1"
     # secret_value        = "password2"
     disable_password_authentication = "false"
+    os_disk = {
+      caching              = "ReadWrite"
+      storage_account_type = "Standard_LRS"
+    }
     source_image_reference = {
       publisher = "Canonical"
       offer     = "0001-com-ubuntu-server-jammy"
@@ -96,6 +100,10 @@ vms = {
     secret_name = "vm2"
     # admin_password        = "password2"
     disable_password_authentication = "false"
+    os_disk = {
+      caching              = "ReadWrite"
+      storage_account_type = "Standard_LRS"
+    }
     source_image_reference = {
       publisher = "Canonical"
       offer     = "0001-com-ubuntu-server-jammy"

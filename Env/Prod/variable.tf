@@ -54,9 +54,11 @@ variable "vms" {
     secret_name         = string
     # secret_value        = string
     disable_password_authentication = bool
-    source_image_reference          = map(string)
+    os_disk=map(string)
+    source_image_reference = map(string)
   }))
 }
+
 
 variable "key_vault" {
   type = map(object({

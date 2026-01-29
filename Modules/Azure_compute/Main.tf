@@ -26,8 +26,8 @@ resource "azurerm_linux_virtual_machine" "vm" {
     azurerm_network_interface.nic[each.key].id,
   ]
   os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
+    caching              = each.value.os_disk.caching
+    storage_account_type = each.value.os_disk.storage_account_type
   }
   source_image_reference {
     publisher = each.value.source_image_reference.publisher
