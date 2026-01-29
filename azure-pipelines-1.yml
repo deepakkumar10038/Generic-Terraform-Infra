@@ -1,0 +1,87 @@
+trigger:
+  - main
+  - feature
+
+pool: default
+
+
+stages:
+  - stage: Build
+    displayName: Build
+    jobs:
+      - job: terraforminitandplan
+        displayName: terraform init and plan job
+        pool: default
+        steps:
+        - task: TerraformInstaller@1
+          inputs:
+            terraformVersion: 'latest'
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Env/Dev'
+            backendServiceArm: 'Deepak_Service'
+            backendAzureRmStorageAccountName: 'deep55stg'
+            backendAzureRmContainerName: 'deepcnt'
+            backendAzureRmKey: 'terraform.tfstate'
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'validate'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Env/Dev'
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            environmentServiceNameAzureRM: 'Deepak_Service'
+
+
+  - stage: scanning
+    displayName: scanning
+    jobs:
+      - job: terraformtfsec
+        displayName: tfsec
+        pool: default
+        steps:
+        - task: tfsec@1
+          inputs:
+            version: 'v1.26.0'
+            dir: '$(System.DefaultWorkingDirectory)/Env/Dev'
+
+  - stage: deploy
+    displayName: deploy
+    jobs:
+      - job: manualvalidation
+        displayName: manaul validation
+        pool: server
+        steps:
+        - task: ManualValidation@1
+          inputs:
+            notifyUsers: 'deepakkumar10038@gmail.com'
+            approvers: 'deepakkumar10038@gmail.com'
+
+
+      - job: terraformapply
+        displayName: terraform job apply
+        dependsOn: manualvalidation
+        pool: Default
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+        steps:
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Env/Dev'
+            backendServiceArm: 'Deepak_Service'
+            backendAzureRmStorageAccountName: 'deep57stg'
+            backendAzureRmContainerName: 'deepcnt'
+            backendAzureRmKey: 'terraform.tfstate'
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'apply'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Env/Dev'
+            environmentServiceNameAzureRM: 'Deepak_Service'
+
+        

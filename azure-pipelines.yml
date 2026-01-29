@@ -3,10 +3,6 @@ trigger: none
 pool: Default
 
 stages:
-  - stage: sca
-    displayname: scan
-
-stages:
 - stage: SoftwareCompositionAnalysis
   displayName: Software Composition Analysis (Dependency Security)
   jobs: 
