@@ -11,10 +11,10 @@ rgs = {
       env           = "prod"
   } }
 
-  # rg2 = {
-  #   name     = "deep_rg1"
-  #   location = "west us 2"
-  # }
+  rg2 = {
+    name     = "deep_rg1"
+    location = "west us 2"
+  }
 }
 
 Stg = {
